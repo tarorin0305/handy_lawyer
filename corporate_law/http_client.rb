@@ -6,8 +6,6 @@ require 'pry-byebug'
 
 module CorporateLaw
   class Client
-    VERSION = 1
-
     def initialize
       @http_client = HttpClient.new(law_num)
     end
