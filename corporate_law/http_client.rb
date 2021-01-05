@@ -31,19 +31,30 @@ module CorporateLaw
           else
             text << "  "
           end
-          text << "#{paragraph.dig('ParagraphSentence', 'Sentence')}\n"
+          text << parse_sentence("#{paragraph.dig('ParagraphSentence', 'Sentence')}")
           if paragraph.dig('Item').present?
             paragraph.dig('Item').each do |item|
-              text << "    第#{item.fetch('ItemTitle')}号 #{item.dig('ItemSentence', 'Sentence')}\n"
+              text << "    第#{item.fetch('ItemTitle')}号 #{parse_sentence(item.dig('ItemSentence', 'Sentence'))}"
             end
           end
         end
       else
         text << '  '
-        text << paragraphs.dig('ParagraphSentence', 'Sentence')
+        text << parse_sentence(paragraphs.dig('ParagraphSentence', 'Sentence'))
       end
 
       text
+    end
+
+    def parse_sentence(sentence)
+      # ただし書きがある場合を考慮
+      if sentence.include?("[\"")
+        splited_sentence = sentence.gsub(/\[|\]|\"/, '').split(',')
+        raise "#{splited_sentence.size}個に分割されたSentenceのパターンが検出されました" if splited_sentence.size > 2
+        "#{splited_sentence.first}\n" + "   " + "#{splited_sentence.last}\n"
+      else
+        sentence + "\n"
+      end
     end
 
     def fetch_article_api(article)
