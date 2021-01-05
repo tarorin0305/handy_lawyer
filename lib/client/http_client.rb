@@ -9,8 +9,4 @@ class HttpClient
   def get(article)
     response = Faraday.get "https://elaws.e-gov.go.jp/api/#{VERSION}/articles;lawNum=#{@law_num};article=#{article}"
   end
-
-  def law_num
-    raise 'implement in embodyment class'
-  end
 end
