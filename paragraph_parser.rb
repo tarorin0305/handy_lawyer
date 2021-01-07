@@ -69,14 +69,6 @@ class ParagraphParser
     return @text
   end
 
-  def with_one_num?
-    paragraph.fetch('Num').to_i == 1
-  end
-
-  def with_nums?
-    paragraph.fetch('Num').to_i > 1
-  end
-
   def with_items?
     paragraph.dig('Item').present?
   end
