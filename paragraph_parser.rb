@@ -20,17 +20,10 @@ class ParagraphParser
     end
   end
 
-  def parse_sentence_without_item
-    @text << add_indent(1)
-    @text << parse_sentence(paragraph.dig('ParagraphSentence', 'Sentence'))
-
-    return @text
-  end
-
   def parse_paragraph_sentence
     @text << add_indent(1)
     @text << "第#{paragraph.fetch('ParagraphNum')}項 " if paragraph.fetch('ParagraphNum').present?
-    @text << parse_sentence("#{paragraph.dig('ParagraphSentence', 'Sentence')}")
+    @text << parse_sentence(paragraph.dig('ParagraphSentence', 'Sentence'))
 
     return @text
   end
@@ -86,10 +79,6 @@ class ParagraphParser
     if sentence.is_a?(Array)
       raise "#{sentence.size}個に分割されたSentenceのパターンが検出されました" if sentence.size > 2
       "#{sentence.first}\n" + "   " + "#{sentence.last}\n"
-    elsif sentence.include?("[\"")
-      splited_sentence = sentence.gsub(/\[|\]|\"/, '').split(',')
-      raise "#{splited_sentence.size}個に分割されたSentenceのパターンが検出されました" if splited_sentence.size > 2
-      "#{splited_sentence.first}\n" + "   " + "#{splited_sentence.last}\n"
     else
       sentence + "\n"
     end
