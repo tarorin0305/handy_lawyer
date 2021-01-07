@@ -1,0 +1,105 @@
+require 'pry-byebug'
+require 'active_support/all'
+# 会社法第107, 238条で動作検証済み
+class ParagraphParser
+  attr_reader :paragraph
+  def initialize(paragraph)
+    @paragraph = paragraph
+    @text = ''
+  end
+
+  def output_parsed_sentence
+    # 項のパース
+    parse_paragraph_sentence
+
+    # 号以降のパース
+    if with_items? # 号を持つ場合
+      parse_sentence_with_items
+    else
+      @text
+    end
+  end
+
+  def parse_sentence_without_item
+    @text << add_indent(1)
+    @text << parse_sentence(paragraph.dig('ParagraphSentence', 'Sentence'))
+
+    return @text
+  end
+
+  def parse_paragraph_sentence
+    @text << add_indent(1)
+    @text << "第#{paragraph.fetch('ParagraphNum')}項 " if paragraph.fetch('ParagraphNum').present?
+    @text << parse_sentence("#{paragraph.dig('ParagraphSentence', 'Sentence')}")
+
+    return @text
+  end
+
+  def parse_sentence_with_items
+    paragraph.dig('Item').each do |item|
+      # イロハがあるかチェック
+
+      if with_subitems?(item)
+        # 号番号と号本文を取得
+        @text << add_indent(2)
+        item_title = item.fetch('ItemTitle')
+        @text << "第#{item_title}号 "
+        item_sentences = item.dig('ItemSentence', 'Column')
+        item_sentences.each do |item_sentence|
+          @text << item_sentence.fetch('Sentence')
+          @text << add_indent(1)
+        end
+        # 号配下のイロハの番号とイロハ本文を取得
+        @text << "\n"
+        subitems = item.fetch('Subitem1')
+        subitems.each do |subitem|
+          subitem_title = subitem.fetch('Subitem1Title')
+          subitem_sentence = parse_sentence(subitem.dig('Subitem1Sentence', 'Sentence'))
+          @text << add_indent(3)
+          @text << "#{subitem_title} #{subitem_sentence}"
+        end
+      else
+        @text << add_indent(2)
+        item_title = item.fetch('ItemTitle')
+        item_sentence = parse_sentence(item.dig('ItemSentence', 'Sentence'))
+        @text << "第#{item_title}号 #{item_sentence}"
+      end
+    end
+
+    return @text
+  end
+
+  def with_one_num?
+    paragraph.fetch('Num').to_i == 1
+  end
+
+  def with_nums?
+    paragraph.fetch('Num').to_i > 1
+  end
+
+  def with_items?
+    paragraph.dig('Item').present?
+  end
+
+  def with_subitems?(item)
+    item.dig('Subitem1').present?
+  end
+
+  def add_indent(n)
+    '  ' * n
+  end
+
+  def parse_sentence(sentence)
+    # ただし書きがある場合を考慮
+    if sentence.is_a?(Array)
+      raise "#{sentence.size}個に分割されたSentenceのパターンが検出されました" if sentence.size > 2
+      "#{sentence.first}\n" + "   " + "#{sentence.last}\n"
+    elsif sentence.include?("[\"")
+      splited_sentence = sentence.gsub(/\[|\]|\"/, '').split(',')
+      raise "#{splited_sentence.size}個に分割されたSentenceのパターンが検出されました" if splited_sentence.size > 2
+      "#{splited_sentence.first}\n" + "   " + "#{splited_sentence.last}\n"
+    else
+      sentence + "\n"
+    end
+  end
+end
