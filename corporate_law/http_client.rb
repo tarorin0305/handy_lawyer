@@ -15,10 +15,16 @@ module CorporateLaw
       '平成十七年法律第八十六号'
     end
 
-    def parse_like_real_roppo(article)
+    def parse_like_real_roppo_to_stdout(article)
       full_result = fetch_article_api(article).dig('DataRoot', 'ApplData', 'LawContents', 'Article')
       output_to_stdout = "#{full_result.fetch('ArticleCaption')} #{full_result.fetch('ArticleTitle')}\n#{parse_paragraph(full_result.fetch('Paragraph'))}"
       puts output_to_stdout
+    end
+
+    def parse_like_real_roppo_to_json(article)
+      full_result = fetch_article_api(article).dig('DataRoot', 'ApplData', 'LawContents', 'Article')
+      output = "#{full_result.fetch('ArticleCaption')} #{full_result.fetch('ArticleTitle')}\n#{parse_paragraph(full_result.fetch('Paragraph'))}"
+      output
     end
 
     def parse_paragraph(paragraphs)
