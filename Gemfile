@@ -6,6 +6,7 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 gem 'faraday'
 gem 'activesupport'
+gem 'puma'
 
 # debug
 gem 'pry-byebug'
