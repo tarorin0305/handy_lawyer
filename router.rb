@@ -7,6 +7,8 @@ class Router
     case path
     when '/api/v0/corporate_law'
       ::CorporateLawController.new(params)
+    when '/api/v0/civil_law'
+      ::CivilLawController.new(params)
     else
       ::RootController.new(params)
     end
