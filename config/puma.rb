@@ -1,8 +1,7 @@
 require 'pry-byebug' # for debugg
+require 'active_support/all'
 require_relative '../router'
-require_relative '../controllers/base_controller'
-require_relative '../controllers/root_controller'
-require_relative '../controllers/corporate_law_controller'
+
 app do |env|
   path = env['REQUEST_PATH']
   query = URI::parse(env["REQUEST_URI"]).query

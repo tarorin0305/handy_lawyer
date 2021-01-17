@@ -1,7 +1,7 @@
 require 'faraday'
 require "rexml/document"
 require 'active_support/all'
-require_relative '../lib/client/http_client'
+require_relative '../http_client'
 require_relative '../paragraph_parser'
 require 'pry-byebug'
 

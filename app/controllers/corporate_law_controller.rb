@@ -1,5 +1,5 @@
 class CorporateLawController < BaseController
-  require_relative '../corporate_law/http_client'
+  require_relative '../model/corporate_law/client'
   def initialize(params)
     @params = params
   end
