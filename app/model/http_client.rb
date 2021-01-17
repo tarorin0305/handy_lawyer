@@ -9,4 +9,9 @@ class HttpClient
   def get(article)
     response = Faraday.get "https://elaws.e-gov.go.jp/api/#{VERSION}/articles;lawNum=#{@law_num};article=#{article}"
   end
+
+  def fetch_article_api(article)
+    response = get(article)
+    response.body
+  end
 end
