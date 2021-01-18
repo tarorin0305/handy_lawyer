@@ -4,7 +4,7 @@
 
 ## Usage
 ```bash
-$ bundle exec ruby main.rb 107
+$ bundle exec ruby main_corporate.rb 107
 （株式の内容についての特別の定め） 第百七条
   株式会社は、その発行する全部の株式の内容として次に掲げる事項を定めることができる。
     第一号 譲渡による当該株式の取得について当該株式会社の承認を要すること。
