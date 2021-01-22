@@ -12,15 +12,17 @@ class ArticleParser
   end
 
   def parse_like_real_roppo_to_stdout(article)
-    full_result = fetch_article_api(article).dig('DataRoot', 'ApplData', 'LawContents', 'Article')
-    output_to_stdout = "#{full_result.fetch('ArticleCaption')} #{full_result.fetch('ArticleTitle')}\n#{parse_paragraph(full_result.fetch('Paragraph'))}"
+    output_to_stdout = parse_article(article)
     puts output_to_stdout
   end
 
-  def parse_like_real_roppo_to_json(article)
+  def parse_like_real_roppo(article)
+    parse_article(article)
+  end
+
+  def parse_article(article)
     full_result = fetch_article_api(article).dig('DataRoot', 'ApplData', 'LawContents', 'Article')
-    output = "#{full_result.fetch('ArticleCaption')} #{full_result.fetch('ArticleTitle')}\n#{parse_paragraph(full_result.fetch('Paragraph'))}"
-    output
+    "#{full_result.fetch('ArticleCaption', nil)} #{full_result.fetch('ArticleTitle')}\n#{parse_paragraph(full_result.fetch('Paragraph'))}"
   end
 
   def parse_paragraph(paragraphs)

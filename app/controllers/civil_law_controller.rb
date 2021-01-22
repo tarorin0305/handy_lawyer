@@ -7,7 +7,7 @@ class CivilLawController < BaseController
     article = article_params(@params).to_i
     return { error: '条文番号には1以上の整数を指定してください' }.to_json if article < 1
 
-    content = ::CivilLaw.new.parse_like_real_roppo_to_json(article)
+    content = ::CivilLaw.new.parse_like_real_roppo(article)
     result = { 
       data: {
         article: article,

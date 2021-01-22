@@ -13,9 +13,10 @@ class CorporateLaw
 
   def parse_like_real_roppo_to_stdout(article)
     @article_parser.parse_like_real_roppo_to_stdout(article)
+    yield if block_given?
   end
 
-  def parse_like_real_roppo_to_json(article)
-    @article_parser.parse_like_real_roppo_to_json(article)
+  def parse_like_real_roppo(article)
+    @article_parser.parse_like_real_roppo(article)
   end
 end
