@@ -54,7 +54,7 @@ class ParagraphParser
       else
         @text << add_indent(2)
         item_title = item.fetch('ItemTitle')
-        item_sentence = parse_sentence(item.dig('ItemSentence', 'Sentence'))
+        item_sentence = parse_item_sentence(item.dig('ItemSentence'))
         @text << "第#{item_title}号 #{item_sentence}"
       end
     end
@@ -72,6 +72,20 @@ class ParagraphParser
 
   def add_indent(n)
     '  ' * n
+  end
+
+  def parse_item_sentence(item_sentence)
+    item_columns = item_sentence.fetch('Column', nil).presence
+    if item_columns.present?  # 「〜の場合 〜の事項」という列挙タイプの条文
+      text = ''
+      item_columns.each do |item_sentence|
+        text << add_indent(3) if item_sentence.fetch('Num').to_i > 1 # 「〜の事項」の部分をインデントする
+        text << item_sentence.fetch('Sentence') + "\n"
+      end
+      return text
+    else
+      parse_sentence(item_sentence.fetch('Sentence'))
+    end
   end
 
   def parse_sentence(sentence)
