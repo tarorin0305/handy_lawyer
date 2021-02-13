@@ -2,8 +2,8 @@ require_relative './parser/article_parser'
 require_relative './parser/paragraph_parser'
 
 class CivilLaw
-  def initialize
-    @article_parser = ArticleParser.new(law_num)
+  def initialize(article_num)
+    @article_parser = ArticleParser.new(law_num, article_num)
   end
 
   def law_num
@@ -14,7 +14,7 @@ class CivilLaw
     @article_parser.parse_like_real_roppo_to_stdout(article)
   end
 
-  def parse_like_real_roppo(article)
-    @article_parser.parse_like_real_roppo(article)
+  def fetch_article
+    @article_parser.parse_article
   end
 end

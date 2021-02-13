@@ -4,14 +4,15 @@ class CivilLawController < BaseController
   end
 
   def generate_response_body
-    article = article_params(@params).to_i
-    return { error: '条文番号には1以上の整数を指定してください' }.to_json if article < 1
+    article_num = article_params(@params).to_i
+    return { error: '条文番号には1以上の整数を指定してください' }.to_json if article_num < 1
 
-    content = ::CivilLaw.new.parse_like_real_roppo(article)
+    raw_article = CivilLaw.new(article_num).fetch_article
+    article_content = ::ArticlePresenter.new(raw_article).to_json
     result = { 
       data: {
-        article: article,
-        content: content
+        article: article_num,
+        content: article_content
       },
       debugg: {
         params: @params
