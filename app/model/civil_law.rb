@@ -1,6 +1,5 @@
 require_relative './parser/article_parser'
 require_relative './parser/paragraph_parser'
-require 'pry-byebug'
 
 class CivilLaw
   def initialize
